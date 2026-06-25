@@ -6,7 +6,7 @@ Python 中的 集合（Set） 是一种非常重要且高效的数据结构。
 """
 
 """
-===== 1. 集合的核心特点
+===== 1. 集合的核心特点 =====
 - 无序性（Unordered）：集合中的元素没有固定的顺序，因此不能通过索引（比如 set[0]）来访问它
 - 唯一性（Unique）：集合中不允许有重复的元素。如果存在重复的元素，它会自动过滤掉
 - 可变性（Mutable）：集合是可变的，可以添加或删除元素
@@ -24,7 +24,7 @@ set_3 = {"apple", "banana", "cherry"}  # 集合元素是无序的，每次运行
 
 
 """
-===== 2. 集合的创建
+===== 2. 集合的创建 =====
 创建集合主要有两种方法：使用花括号 {} 或 set() 函数
 set() 方法可以接受一个可迭代对象作为参数，比如列表、元组、字符串等，存在重复元素会自动过滤
 
@@ -41,7 +41,7 @@ unique_set = set(my_list)
 
 
 """
-===== 3. 集合的常用操作（增、删、查）
+===== 3. 集合的常用操作（增、删、查）=====
 """
 
 """
@@ -79,7 +79,90 @@ books = {'vue', 'react', 'angular', 'node'}
 # print(del_el)
 
 # books.clear()
-print(books)
+# print(books)
 
-print("node" in books)  # [ in ] 成员检测，时间复杂度为 O(1)
-print("java" not in books)
+# print("node" in books)  # [ in ] 成员检测，时间复杂度为 O(1)
+# print("java" not in books)
+
+
+"""
+===== 4. 冻结集合（frozenset）=====
+frozenset 是不可变的集合。它具备集合的去重和无序特性，但不能被修改（无增删方法）。
+由于其不可变性，frozenset 是“可哈希的（hashable）”，因此它可以：
+1. 作为字典的键（Key）
+2. 作为普通集合（set）的元素
+"""
+# immutable_set = frozenset([1, 2, 3, 4])
+# immutable_set.add(5)  # AttributeError: 'frozenset' object has no attribute 'add'
+# print(f"这是一个不可变集合: {immutable_set}")
+
+
+"""
+===== 5. 集合的核心操作（数学运算、关系判断）=====
+"""
+A = {1, 2, 3, 4}
+B = {3, 4, 5, 6}
+
+# 并集：合并所有元素 [ | 或 unio() ]
+# print(A | B)
+# print(A.union(B))
+# print(B.union(A))
+
+# 交集：共同拥有的元素 [ & 或 intersection() ]
+# print(A & B)
+# print(A.intersection(B))
+# print(B.intersection(A))
+
+# 差集：一个有，一个没有的元素 [ - 或 difference() ]
+# print(A - B)
+# print(A.difference(B))
+# print(B - A)
+
+# 对称差集：有且仅属于其中一个集合的元素 [ ^ 或 symmetric_difference() ]，可理解为 并集 - 交集
+# print(A ^ B)
+# print(A.symmetric_difference(B))
+# print(B ^ A)
+
+C = {1, 2}
+D = {1, 2, 3}
+
+# 是否子集 [ <= 或 issubset() ]
+# print(C <= D)
+# print(D.issubset(C))
+
+# 是否真子集（C 是 D 的子集，且两者不相等）[ < ]
+# print(C < D)  # 返回 True
+
+# 是否超集（超集是一个集合包含另一个集合）[ >= 或 issuperset() ]
+# print(D >= C)
+# print(D.issuperset(C))
+
+# 是否真超集（D 是 C 的超集，且两者不相等）[ > ]
+# print(D > C)  # 返回 True
+
+# 是否不相交
+# print({1, 2}.isdisjoint({3, 4}))
+
+
+"""
+===== 6. 集合的常见应用场景 =====
+"""
+# 快速去重
+data = [1, 2, 2, 3, 3, 3]
+unique = list(set(data))  # [1, 2, 3]（顺序不保证）
+
+# 高效成员检查（比 list 快得多）
+valid_users = {"alice", "bob", "charlie"}
+if "alice" in valid_users:  # O(1) 查找
+    print("已授权")
+
+# 找两个列表的共同元素
+a = [1, 2, 3, 4]
+b = [3, 4, 5, 6]
+common = set(a) & set(b)
+
+# 找差异（例如新增了哪些功能）
+old_features = {"login", "search"}
+new_features = {"login", "search", "export", "share"}
+added = new_features - old_features
+# print(f"新增功能为：{added}")
