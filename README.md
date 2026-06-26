@@ -55,6 +55,31 @@
   .venv\Scripts\Activate.ps1
   ```
 
+#### 查看当前环境
+
+- windows cmd
+
+```cmd
+where python
+```
+
+- windows PowerShell
+
+```powershell
+Get-Command python | Select-Object -ExpandProperty Source
+```
+
+#### 查看当前环境安装的包
+
+- **macOS / Linux**：
+  ```bash
+  pip list
+  ```
+- **Windows**：
+  ```cmd
+  pip list
+  ```
+
 #### 退出虚拟环境
 
 当开发完毕，想要回到系统的全局 Python 环境时：
