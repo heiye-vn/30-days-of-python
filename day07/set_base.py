@@ -96,6 +96,11 @@ frozenset 是不可变的集合。它具备集合的去重和无序特性，但�
 # immutable_set.add(5)  # AttributeError: 'frozenset' object has no attribute 'add'
 # print(f"这是一个不可变集合: {immutable_set}")
 
+# 由于 frozenset 本身是可哈希的，因此它可以作为字典的键，也可以作为普通 set 的元素
+fs1 = frozenset({1, 2})
+fs2 = frozenset({3, 4})
+s = {fs1, fs2}
+print(s)
 
 """
 ===== 5. 集合的核心操作（数学运算、关系判断）=====
@@ -145,7 +150,16 @@ D = {1, 2, 3}
 
 
 """
-===== 6. 集合的常见应用场景 =====
+===== 6. 集合推导式（类似列表推导式）
+"""
+nums = {x * x for x in range(5)}
+# print(nums)
+even = {x for x in range(10) if x % 2 == 0}
+# print(even)
+
+
+"""
+===== 7. 集合的常见应用场景 =====
 """
 # 快速去重
 data = [1, 2, 2, 3, 3, 3]
