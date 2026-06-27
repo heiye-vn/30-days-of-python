@@ -63,7 +63,7 @@ score = 90
 my_list = [1, 2, 3, 4, 5]
 # print(8 in my_list)  # [ in ] 判断某个值是否在序列中
 # print(2 not in my_list)  # [ not in ] 判断某个值是否不在序列中
-my_string = 'Hello World'
+my_string = "Hello World"
 # print('world' in my_string)  # False, Python 严格区分大小写
 # print('d' in {'d': 1})  # 字典检查 key
 
@@ -74,11 +74,11 @@ list_a = [1, 2, 3]
 list_b = [1, 2, 3]
 list_c = list_a
 # print(list_a == list_b)  # True，== 判断的是值是否相等
-# print(list_a is list_b)  # [ is ] 判断两个对象是否为同一个对象，等价于 id(list_a) === id(list_b)
+# print(list_a is list_b)  # [ is ] 判断两个对象是否为同一个对象，等价于 id(list_a) == id(list_b)
 # print(id(list_a))
 # print(id(list_b))
 # print(id(list_c))
-# print(list_b is not list_c)  # [ is not ] 判断两个对象是否为不同对象，等价于 id(list_a) !== id(list_b)
+# print(list_b is not list_c)  # [ is not ] 判断两个对象是否为不同对象，等价于 id(list_a) != id(list_b)
 
 
 # ===== 七. 位运算符（Bitwise Operators）=====
