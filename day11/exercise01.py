@@ -148,10 +148,13 @@ def reverse_list1(lst):
 # 10. 声明一个名为 capitalize_list_items 的函数。它接受一个列表作为参数，并返回一个大写的列表项
 def capitalize_list_items(lst):
     # return [item.capitalize() for item in lst]
-    return [item.upper() for item in lst]
+    # return [item.upper() for item in lst]
+    # 仅对字符串类型的元素进行转换，非字符串元素保持原样
+    return [item.capitalize() if isinstance(item, str) else item for item in lst]
 
 
 # print(capitalize_list_items(["hello", "world", "python"]))
+# print(capitalize_list_items([1, "hello", "world", "python", True]))
 
 
 # 11. 声明一个名为 add_item 的函数。它接受一个列表和一个项作为参数。它返回在末尾添加项的列表
@@ -178,7 +181,27 @@ def remove_item(lst, item):
 
 # 13. 声明一个名为 sum_of_numbers 的函数。它接受一个数字参数并将范围内的所有数字相加
 def sum_of_numbers(n):
-    return sum(range(1, n + 1))
+    # n 如果很大时用 range 计算范围会消耗计算资源
+    # return sum(range(1, n + 1))
+    # 使用等差数列求和方式计算
+    return n * (n + 1) / 2
+
 
 # print(sum_of_numbers(10))
 # print(sum_of_numbers(100))
+# print(sum_of_numbers(3))
+
+
+# 14. 声明一个名为 sum_of_odds 的函数。它接受一个数字参数并将范围内的所有奇数相加
+def sum_of_odds(n):
+    return sum(range(1, n + 1, 2))
+
+
+# print(sum_of_odds(10))
+
+
+# 15. 声明一个名为 sum_of_even 的函数。它接受一个数字参数并将范围内的所有偶数相加
+def sum_of_even(n):
+    return sum(range(2, n + 1, 2))
+
+# print(sum_of_even(5))
