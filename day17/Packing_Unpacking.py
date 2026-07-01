@@ -42,6 +42,7 @@ def create_profile(**kwargs):
 
 # create_profile(name="Alice", age=30, city="Beijing")
 
+
 # 与固定参数混合使用
 def build_query(table, **conditions):
     """构建 SQL 查询条件"""
@@ -116,7 +117,42 @@ Charlie,charlie@mail.com,13700003333,Shenzhen,28"""
 # strip() 去除字符串两边的空白字符（空格，换行符，制表符），可指定字符
 data_list = csv_data.strip().split("\n")
 data_list = data_list[1:]  # 去除表头
-for line in data_list:
-    fields = line.split(",")
-    name, email, *extras = fields
-    print(f"{name}: {email}, 额外信息：{extras}")
+# for line in data_list:
+#     fields = line.split(",")
+#     name, email, *extras = fields
+#     print(f"{name}: {email}, 额外信息：{extras}")
+
+
+"""
+嵌套解包: 对嵌套结构进行多层解包
+"""
+# 嵌套元组
+data = ("Alice", (30, "Beijing"), ["Python", "Java"])
+name, (age, city), skills = data
+print(f"{name}, {age}岁，来自{city}，技能：{skills}")
+
+# 嵌套列表
+matrix = [[1, 2], [3, 4], [5, 6]]
+(a, b), (c, d), (e, f) = matrix
+print(a, b, c, d, e, f)
+
+# 复杂嵌套 + 星号
+records = [("Alice", 90, 85, 92), ("Bob", 78, 88, 76)]
+for name, *scores in records:
+    avg = sum(scores) / len(scores)  # noqa
+    print(f"{name}: 平均分 {avg:.1f}")
+
+
+"""
+字典解包
+"""
+
+
+# 使用 ** 解包字典，作为函数参数
+def connect(host, port, timeout=30, retries=3):
+    print(f"连接 {host}:{port} (超时={timeout}s, 重试={retries}次)")
+
+
+config = {"host": "localhost", "port": 5432, "timeout": 10, "retries": 5}
+
+connect(**config)
