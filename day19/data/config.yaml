@@ -1,0 +1,15 @@
+server:
+  host: localhost
+  port: 8080
+  debug: true
+
+database:
+  driver: postgresql
+  name: myapp_db
+  user: admin
+  password: secret123
+
+logging:
+  level: INFO
+  file: app.log
+  max_size: 10MB

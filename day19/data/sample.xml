@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+    <book id="bk101">
+        <author>Python Master</author>
+        <title>Python File Handling Guide</title>
+        <genre>Technology</genre>
+        <price>49.99</price>
+        <publish_date>2026-01-01</publish_date>
+    </book>
+    <book id="bk102">
+        <author>Data Expert</author>
+        <title>Data Processing with Python</title>
+        <genre>Technology</genre>
+        <price>59.99</price>
+        <publish_date>2026-03-15</publish_date>
+    </book>
+</catalog>
