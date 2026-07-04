@@ -116,6 +116,21 @@ TXT_ENCODING: Final[str] = "utf-8"
 #     f.write(binary_data)
 
 # 更推荐写法：分块读取写入，不会一次性占用大量内存
-with open("data/image.png", "rb") as src, open("data/image_copy.png", "wb") as dst:
-    while chunk := src.read(8192):  # 8192 字节（8kb），全部读完会返回空字节串，循环结束
-        dst.write(chunk)
+# with open("data/image.png", "rb") as src, open("data/image_copy.png", "wb") as dst:
+#     while chunk := src.read(8192):  # 8192 字节（8kb），全部读完会返回空字节串，循环结束
+#         dst.write(chunk)
+
+
+"""
+6. 异常处理
+"""
+# 实际开发中不推荐直接打开文件，而是推荐使用 try...except...finally 语句来处理文件打开和关闭的异常
+try:
+    with open("a.txt", "r", encoding=TXT_ENCODING) as f:
+        print(f.read())
+except FileNotFoundError:
+    print("文件未找到")
+except UnicodeDecodeError:
+    print("文件编码错误")
+except PermissionError:
+    print("没有权限访问文件")
