@@ -10,10 +10,17 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
 
+import markdown
 import openpyxl
 import pandas as pd
+import pdfplumber
 import yaml
 from openpyxl.styles import Font, PatternFill
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+from pypdf import PdfReader, PdfWriter
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.pdfencrypt import encryptCanvas
+from reportlab.pdfgen import canvas
 
 """ 1 文本文件（.txt） """
 # 读取
@@ -287,15 +294,15 @@ ws.column_dimensions["B"].width = 10
 # wb.save("data/output.xlsx")
 
 # ========== 读取 Excel ==========
-wb_read = openpyxl.load_workbook("data/output.xlsx")
-ws_read = wb_read.active
+# wb_read = openpyxl.load_workbook("data/output.xlsx")
+# ws_read = wb_read.active
 # for row in ws_read.iter_rows(min_row=1, values_only=True):
 #     print(row)
 
 # ========== pandas 处理 Excel（数据分析首选） ==========
 
 # 读取
-df = pd.read_excel("data/output.xlsx", sheet_name="员工数据")
+# df = pd.read_excel("data/output.xlsx", sheet_name="员工数据")
 # print(df)
 
 # 写入（支持多个 sheet）
@@ -306,8 +313,198 @@ df = pd.read_excel("data/output.xlsx", sheet_name="员工数据")
 
 """ 8. PDF 文件 """
 
+# ========== 读取 PDF（pypdf） ==========
+# reader = PdfReader("data/sample.pdf")
+# print(f"总页数：{len(reader.pages)}")
+# for i, page in enumerate(reader.pages):
+#     text = page.extract_text()
+#     print(f"--- 第 {i + 1} 页")
+#     print(text)
 
-""" 9. 图片 文件 """
+# ========== 合并 PDF ==========
+# with PdfWriter() as writer:
+#     writer.append("file.pdf")
+#     writer.append("file2.pdf")
+#     writer.write("merged.pdf")
 
+# ========== 创建 PDF（reportlab） ==========
+
+# 1. 创建普通 PDF 文件
+# c = canvas.Canvas("data/output.pdf", pagesize=A4)
+# c.setFont("Helvetica", 12)
+# c.drawString(100, 750, "Hello, World!")
+# c.drawString(100, 730, "Created with reportlab.")
+# c.save()
+
+# 2. 创建加密 PDF 文件（对 canvas 进行原地加密包装）
+# raw_canvas = canvas.Canvas("data/output_encrypted.pdf", pagesize=A4)
+# # 原地配置加密，设置打开密码为 "my_password"
+# encryptCanvas(raw_canvas, userPassword="my_password")
+# raw_canvas.setFont("Helvetica", 12)
+# raw_canvas.drawString(100, 750, "This is an encrypted PDF.")
+# raw_canvas.save()
+
+# ========== PDF 转文本（pdfplumber，表格提取更强） ==========
+# with pdfplumber.open("data/sample.pdf") as pdf:
+#     for i, page in enumerate(pdf.pages):
+#         print(f"--- 第 {i + 1} 页表格数据 --- ")
+#         # 提取当前页面的所有表格，返回一个三维列表：【表格数、行数、列数】
+#         tables = page.extract_tables()
+#         for table in tables:
+#             for row in table:
+#                 print(row)
+
+
+""" 9. 图片文件 """
+
+# ========== 基本操作 ==========
+img = Image.open("data/image.png")
+# print(f"尺寸：{img.size}")
+# print(f"模式：{img.mode}")
+# print(f"格式：{img.format}")
+
+# 调整大小
+img_resized = img.resize((800, 600))
+# img_resized.save("data/resized_image.png")
+
+# 裁剪（left、upper、right、lower）
+img_cropped = img.crop((100, 100, 400, 400))
+# img_cropped.save("data/cropped_image.png")
+
+# 旋转
+img_rotated = img.rotate(90, expand=True)
+# img_rotated.save("data/rotated_image.png")
+
+# 转换为灰度图像
+img_gray = img.convert("L")
+# img_gray.save("data/grayscale_image.png", "PNG")
+
+# ========== 滤镜 ========
+img_blur = img.filter(ImageFilter.BLUR)  # 模糊滤镜
+# img_blur.save("data/blurred_image.png")
+img_edge = img.filter(ImageFilter.FIND_EDGES)  # 边缘检测滤镜
+# img_edge.save("data/edge_image.png")
+img_sharpen = img.filter(ImageFilter.SHARPEN)  # 锐化滤镜
+# img_sharpen.save("data/sharpened_image.png")
+
+# ========== 图像增强 ==========
+enhancer = ImageEnhance.Brightness(img)
+img_bright = enhancer.enhance(1.5)
+# img_bright.save("data/bright_image.png")
+
+# ========== 批量处理示例 ==========
+# for img_path in Path("data").glob("*.png"):
+#     img = Image.open(img_path)
+#     img.thumbnail((200, 200))  # 保持比例的缩放
+#     img.save(f"data/batch_imgs/thumb_{img_path.name}")
+
+# ========== 常见高频补充操作 ==========
+
+# 1. 创建全新画布
+bg = Image.new("RGBA", (400, 400), color="white")  # 创建 400x400 的白色透明画布
+
+# 2. 图像绘制与文字水印（几何图形与文字）
+draw = ImageDraw.Draw(img)
+# 画矩形（常用于目标检测 Bounding Box 绘制）
+draw.rectangle([50, 50, 200, 200], outline="red", width=3)
+# 画圆形/椭圆
+draw.ellipse([250, 50, 350, 150], fill="blue")
+# 绘制文字水印（可以使用默认字体或加载自定义 ttf 字体）
+# font = ImageFont.truetype("arial.ttf", 20)
+draw.text((10, 10), "Sample Watermark", fill="yellow")
+# img.save("data/drawn_image.png")
+
+# 3. 图像拼接/贴图（如粘贴 Logo）
+# logo = Image.open("data/image.png")
+# 如果 logo 带有透明通道（RGBA），需将它同时作为 mask 参数传入，以保证透明度正常
+# img.paste(logo, (50, 50), mask=logo)
+# img.save("data/pasted_image.png")
+
+# 4. 图像保存优化（质量压缩与大小优化）
+# 对于 JPG，可以使用 quality 调节质量（1-95），optimize=True 可以进一步压缩文件体积
+# img.convert("RGB").save("data/compressed.jpg", "JPEG", quality=85, optimize=True)
 
 """ 10. Markdown 文件 """
+
+# ========== 基础读写 ==========
+# Markdown 本质上是 UTF-8 编码的纯文本文件，可以直接用内置 read_text/write_text 进行读写
+md_content = """# Python 学习指南
+
+这是正文内容，包含一个 [超链接](https://google.com) 和 **加粗文本**。
+
+- 列表项一
+- 列表项二
+"""
+# 写入 .md 文件
+# Path("data/output.md").write_text(md_content, encoding="utf-8")
+
+# 读取 .md 文件
+# text = Path("data/sample.md").read_text(encoding="utf-8")
+# print(text)
+
+
+# ========== 解析与渲染（Markdown 转 HTML） ==========
+with open("data/AI_Agent_Study_Plan.md", "r", encoding="utf-8") as f:
+    md_text = f.read()
+
+# html = markdown.markdown(md_text, extensions=["tables", "fenced_code"])
+# print(html)
+
+# 带扩展名的转换
+html = markdown.markdown(
+    md_text,
+    extensions=[
+        "tables",  # 表格支持
+        "fenced_code",  # 代码块
+        "codehilite",  # 代码高亮
+        "toc",  # 目录生成
+        "nl2br",  # 换行转 br
+    ],
+)
+
+# 写入 html 文件，并加入简易精美的 CSS 样式来美化表格与文字布局
+css_style = """
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        color: #24292e;
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+    }
+    th, td {
+        border: 1px solid #dfe2e5;
+        padding: 10px 14px;
+        text-align: left;
+    }
+    th {
+        background-color: #f6f8fa;
+        font-weight: 600;
+    }
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+</style>
+"""
+with open("data/output.html", "w", encoding="utf-8") as f:
+    f.write(f"<html><head>{css_style}</head><body>{html}</body></html>")
+
+# ========== 提取 Front Matter（文档/博客元数据） ==========
+# 很多 Markdown 文件（例如 Hugo、Hexo 静态博客）顶部会包含 YAML 格式的元数据（Front Matter），如：
+# ---
+# title: "Markdown 处理教学"
+# date: 2026-07-05
+# tags: [Python, Markdown]
+# ---
+# 推荐使用 `python-frontmatter` 库来进行解析（需要安装：pip install python-frontmatter）
+#
+# import frontmatter
+# post = frontmatter.load("data/post.md")
+# print("元数据字典 (Metadata):", post.metadata)
+# print("文章正文内容 (Content):", post.content)
