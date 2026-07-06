@@ -61,3 +61,46 @@ team2 = Team("B")
 team1.members.append("Alice")
 # print(team1.members)  # ['Alice']
 # print(team2.members)  # []
+
+
+""" 冻结对象 """
+
+
+@dataclass(frozen=True)
+class Config:
+    host: str
+    port: int
+
+
+config = Config("localhost", 8000)
+# config.port = 9000 # FrozenInstanceError
+# print(config)
+
+
+""" 排序 """
+
+
+# 按 value 排序
+@dataclass(order=True)
+class Score:
+    value: int
+    name: str
+
+
+scores = [Score(90, "Alice"), Score(85, "Bob")]
+# print(scores)
+# print(sorted(scores))
+
+
+""" 初始化后处理 """
+
+
+@dataclass
+class Rectangle:
+    width: float
+    height: float
+
+    # __post__init 会在自动生成的 __init__ 结束后执行
+    def __post_init__(self):
+        if self.width <= 0 or self.height <= 0:
+            raise ValueError("宽和高必须为正数")

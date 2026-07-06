@@ -1318,7 +1318,7 @@ class Student:
         self.student_id = student_id
         self.name = name
         self.age = age
-        self.score = score
+        self._score = score
 
     @property
     def score(self):
