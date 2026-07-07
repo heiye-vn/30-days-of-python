@@ -177,6 +177,8 @@ class Order:
 
 两个类之间有"使用"关系，但各自独立生存。
 
+语义：`Has-a`, 耦合强度：中 🟡
+
 ```python
 class Teacher:
     def __init__(self, name: str):
@@ -198,6 +200,8 @@ teacher.teach(course)
 ### 2.2 聚合（Aggregation）
 
 整体和部分的关系，但部分可以脱离整体独立存在。用"空心菱形"表示。
+
+语义：`Has-a（整体与部分）`, 耦合强度：较强 🟠
 
 ```python
 class Department:
@@ -221,6 +225,8 @@ dept.add_employee(alice)
 ### 2.3 组合（Composition）
 
 更强的整体-部分关系，部分不能脱离整体独立存在。用"实心菱形"表示。
+
+语义：`Has-a（强整体与部分）`, 耦合强度：强 🔴
 
 ```python
 class House:
@@ -246,6 +252,8 @@ house.add_room("卧室", 15.0)
 
 "is-a"关系：子类是父类的一种特殊形式。
 
+语义：`is-a`, 耦合强度：极强 💀
+
 ```python
 class Vehicle:
     def move(self): ...
@@ -261,6 +269,8 @@ class Ship(Vehicle):      # Ship is-a Vehicle
 
 最弱的关系，一个类在某个方法中临时使用了另一个类。
 
+语义：`Use-a`, 耦合强度：弱 🟢
+
 ```python
 class Report:
     def export(self, formatter):
@@ -268,13 +278,19 @@ class Report:
         return formatter.format(self.data)
 ```
 
-### 2.6 关系强度对比
+### 2.6 实现（Realization）
+
+定义了接口（或抽象契约），子类负责实现该接口的具体行为
+
+语义：`Like-a`, 耦合强度：强 🔴
+
+### 2.7 关系强度对比
 
 从弱到强排列：
 
 ```text
-依赖 → 关联 → 聚合 → 组合 → 继承
-最弱                          最强
+依赖 → 关联 → 聚合 → 组合 → 实现 → 继承
+最弱                            最强
 ```
 
 **设计原则：优先使用弱的关系。** 继承是最强的关系，意味着最大的耦合，所以有"组合优于继承"这条经典建议（后面会详细展开）。
@@ -512,6 +528,10 @@ service2 = NotificationService(SlackSender())
 
 ### 4.1 工厂模式（Factory）
 
+**核心意图**：定义一个创建对象的接口，让子类决定实例化哪一个类。
+
+**Pythonic 实现**：由于 Python 中**“类也是对象” (Classes are Objects)**，我们可以直接将类作为字典的值进行传递，无需像静态语言那样编写复杂的 `switch-case` 或多重 `if-else`。
+
 **场景**：创建对象时，不想让调用方知道具体创建哪个类。
 
 ```python
@@ -611,6 +631,8 @@ result = sorter_func([64, 34, 25, 12, 22])
 
 ### 4.3 观察者模式（Observer）
 
+**核心意图**：定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新。
+
 **场景**：一个对象状态变化时，自动通知所有关心它的对象。
 
 ```python
@@ -663,7 +685,9 @@ bus.publish("user.registered", {"user": "张三", "email": "zs@example.com"})
 
 ### 4.4 单例模式（Singleton）
 
-**场景**：确保某个类只有一个实例，全局共享。
+**核心意图**：确保一个类只有一个实例，并提供一个全局访问点。
+
+如果必须使用类来实现，可以通过重写 `__new__` 方法或使用元类 (Metaclass) 控制实例化过程：
 
 ```python
 class AppConfig:
@@ -691,6 +715,8 @@ config1.set("debug", True)
 print(config2.get("debug"))  # True
 ```
 
+**Pythonic 实现**：在 Python 中，**模块 (Module)** 在第一次导入时会被编译并生成 `.pyc` 文件，后续的 `import` 语句只会从内存中获取该模块对象。因此，**最简单、最安全的单例模式就是直接使用 Python 模块**。
+
 Pythonic 替代方案：用模块级变量也可以实现单例效果。
 
 ```python
@@ -705,6 +731,8 @@ def get(key, default=None):
 ```
 
 ### 4.5 装饰器模式（Decorator）
+
+**核心意图**：动态地给一个对象添加一些额外的职责。相比生成子类，装饰器模式更为灵活。
 
 **场景**：动态给对象添加额外功能，而不改变原始类。
 
@@ -748,6 +776,8 @@ print(result)  # "HELLO WORLD"
 ```
 
 Python 的函数装饰器（`@decorator`）其实就是装饰器模式的语法糖。
+
+**Pythonic 实现**：Python 内置了 `@decorator` 语法糖，使得函数和类的装饰变得极为自然。这通常通过闭包 (Closure) 来实现。
 
 ### 4.6 建造者模式（Builder）
 
