@@ -583,7 +583,15 @@ print(greet(123))      # 运行时会在字符串拼接处报错，不是因为�
 
 ---
 
-### 2. 变量类型注解
+### 2. Typing 模块
+
+Python 内置的简单类型（int、str、float、bool、bytes、None）可以直接使用，但更复杂的类型需要借助 typing 模块。
+
+`typing` 模块是**类型提示（Type Hints）**的标准库。
+
+**核心作用：为代码添加类型注解，提升可读性和工具支持，但不影响运行时行为**。
+
+### 3. 变量类型注解
 
 基本写法：
 
@@ -619,7 +627,7 @@ scores: dict[str, int] = {}
 
 ---
 
-### 3. 函数参数和返回值注解
+### 4. 函数参数和返回值注解
 
 ```python
 def repeat(text: str, times: int) -> str:
@@ -649,7 +657,7 @@ def do_something() -> None:
 
 ---
 
-### 4. 常见内置类型注解
+### 5. 常见内置类型注解
 
 Python 3.9 之后，可以直接用内置集合类型写注解：
 
@@ -679,7 +687,7 @@ numbers: tuple[int, ...] = (1, 2, 3, 4)
 
 ---
 
-### 5. `Any`：任意类型
+### 6. `Any`：任意类型
 
 `Any` 表示任何类型都可以。
 
@@ -710,7 +718,7 @@ data = {"name": "Alice"}
 
 ---
 
-### 6. `Union` 和 `|`：多个可能类型
+### 7. `Union` 和 `|`：多个可能类型
 
 如果一个值可能是多种类型，可以使用联合类型。
 
@@ -735,7 +743,7 @@ def normalize_id(value: Union[int, str]) -> str:
 
 ---
 
-### 7. `Optional`：可能为 `None`
+### 8. `Optional`：可能为 `None`
 
 `Optional[str]` 表示值可以是 `str`，也可以是 `None`。
 
@@ -779,7 +787,7 @@ else:
 
 ---
 
-### 8. `Literal`：限定具体取值
+### 9. `Literal`：限定具体取值
 
 如果一个参数只能取几个固定值，可以用 `Literal`。
 
@@ -802,7 +810,7 @@ open_resource("delete") # 类型检查工具会提示错误
 
 ---
 
-### 9. 类型别名
+### 10. 类型别名
 
 如果一个类型写起来很长，可以起别名。
 
@@ -834,7 +842,7 @@ type ScoreMap = dict[str, int]
 
 ---
 
-### 10. `Callable`：函数类型
+### 11. `Callable`：函数类型
 
 函数也可以作为参数传递。
 
@@ -874,7 +882,7 @@ def calculate(a: int, b: int, operation: Calculator) -> int:
 
 ---
 
-### 11. `Iterable`、`Sequence`、`Mapping`
+### 12. `Iterable`、`Sequence`、`Mapping`
 
 写函数参数类型时，不一定总要写具体容器，比如 `list[str]`。
 
@@ -924,7 +932,7 @@ def show_scores(scores: Mapping[str, int]) -> None:
 
 ---
 
-### 12. `TypedDict`：给字典规定结构
+### 13. `TypedDict`：给字典规定结构
 
 普通字典注解只能描述键和值的类型：
 
@@ -984,7 +992,7 @@ class UserProfile(TypedDict):
 
 ---
 
-### 13. `Protocol`：按能力描述类型
+### 14. `Protocol`：按能力描述类型
 
 有时我们不关心对象属于哪个类，只关心它有没有某些方法。
 
@@ -1022,7 +1030,7 @@ close_resource(Connection())
 
 ---
 
-### 14. 泛型：让类型保持关联
+### 15. 泛型：让类型保持关联
 
 看一个普通函数：
 
@@ -1073,7 +1081,7 @@ def choose(left: T, right: T) -> T:
 
 ---
 
-### 15. 泛型类
+### 16. 泛型类
 
 自己写容器类时，也可以使用泛型。
 
@@ -1114,7 +1122,7 @@ class Box[T]:
 
 ---
 
-### 16. `Self`：返回当前类实例
+### 17. `Self`：返回当前类实例
 
 链式调用中，经常需要返回 `self`。
 
@@ -1142,7 +1150,7 @@ print(query.build())
 
 ---
 
-### 17. `ClassVar` 和实例属性
+### 18. `ClassVar` 和实例属性
 
 类属性和实例属性不一样。
 
@@ -1166,7 +1174,7 @@ class User:
 
 ---
 
-### 18. `Final`：不希望被重新赋值
+### 19. `Final`：不希望被重新赋值
 
 ```python
 from typing import Final
@@ -1185,7 +1193,7 @@ MAX_RETRY = 5  # 类型检查工具会提示
 
 ---
 
-### 19. `Annotated`：给类型附加元信息
+### 20. `Annotated`：给类型附加元信息
 
 `Annotated` 可以在类型之外附加额外信息。
 
@@ -1213,7 +1221,7 @@ UserId = Annotated[int, "database primary key"]
 
 ---
 
-### 20. `overload`：同一个函数的多种调用形式
+### 21. `overload`：同一个函数的多种调用形式
 
 有些函数根据参数不同返回不同类型。
 
@@ -1262,7 +1270,7 @@ def get_item(index: int | slice) -> str | list[str]:
 
 ---
 
-### 21. `NewType`：区分含义不同的相同底层类型
+### 22. `NewType`：区分含义不同的相同底层类型
 
 用户 ID 和商品 ID 都可能是 `int`，但它们的业务含义不同。
 
@@ -1289,7 +1297,7 @@ get_user(pid)  # 类型检查工具会提示
 
 ---
 
-### 22. 前向引用与 `from __future__ import annotations`
+### 23. 前向引用与 `from __future__ import annotations`
 
 有时类的方法需要返回类自身：
 
@@ -1319,7 +1327,7 @@ from __future__ import annotations
 
 ---
 
-### 23. 类型注解不会自动校验运行时数据
+### 24. 类型注解不会自动校验运行时数据
 
 下面的代码可以运行到函数内部：
 
@@ -1355,7 +1363,7 @@ def double(value: int) -> int:
 
 ---
 
-### 24. 使用类型检查工具
+### 25. 使用类型检查工具
 
 常见工具：
 
@@ -1398,7 +1406,7 @@ pyright
 
 ---
 
-### 25. 类型注解的推荐实践
+### 26. 类型注解的推荐实践
 
 #### 推荐 1：函数签名优先写
 
