@@ -1,0 +1,81 @@
+2026-07-10 10:59:19 │ INFO     │ myapp:simulate_business:201 │ 订单系统启动，等待请求...
+2026-07-10 10:59:20 │ INFO     │ myapp:simulate_business:204 │ 收到新订单: user=u_2048, items=3, amount=¥599.00
+2026-07-10 10:59:20 │ DEBUG    │ myapp:simulate_business:208 │ 库存查询: SKU-A 剩余 120, SKU-B 剩余 45, SKU-C 剩余 8
+2026-07-10 10:59:20 │ DEBUG    │ myapp:simulate_business:209 │ 价格计算明细: 原价=¥799, 优惠=¥200, 实付=¥599
+2026-07-10 10:59:20 │ WARNING  │ myapp:simulate_business:213 │ SKU-C 库存不足 10 件，即将售罄，建议补货
+2026-07-10 10:59:20 │ INFO     │ myapp:simulate_business:217 │ 调用支付网关...
+2026-07-10 10:59:21 │ WARNING  │ myapp:simulate_business:219 │ 支付网关超时 (第1次)，2秒后重试...
+2026-07-10 10:59:21 │ INFO     │ myapp:simulate_business:221 │ 支付网关响应成功 (重试第1次)
+2026-07-10 10:59:21 │ INFO     │ myapp:simulate_business:225 │ 生成发货单...
+2026-07-10 10:59:21 │ ERROR    │ myapp:simulate_business:231 │ 发货单生成失败: 无法连接到数据库 192.168.1.100:3306，连接超时
+Traceback (most recent call last):
+  File "C:\Users\10642\.qoderworkcn\workspace\mrec5v98i1lh26or\outputs\logging_demo\logging_multi_destination.py", line 229, in simulate_business
+    raise ConnectionError("无法连接到数据库 192.168.1.100:3306，连接超时")
+ConnectionError: 无法连接到数据库 192.168.1.100:3306，连接超时
+2026-07-10 10:59:23 │ CRITICAL │ myapp:simulate_business:240 │ 系统级故障: 主从数据库全部宕机，服务不可用
+Traceback (most recent call last):
+  File "C:\Users\10642\.qoderworkcn\workspace\mrec5v98i1lh26or\outputs\logging_demo\logging_multi_destination.py", line 238, in simulate_business
+    raise RuntimeError("主从数据库全部宕机，服务不可用")
+RuntimeError: 主从数据库全部宕机，服务不可用
+2026-07-10 11:00:52 | INFO     | myapp:process_order:148 | Order ORD-20240115-001: start processing, user=user_2048, items=3
+2026-07-10 11:00:52 | DEBUG    | myapp:process_order:151 | Order ORD-20240115-001: inventory check - SKU counts: {'SKU-A': 100, 'SKU-B': 90, 'SKU-C': 80}
+2026-07-10 11:00:52 | INFO     | myapp:process_order:155 | Order ORD-20240115-001: payment authorized, amount=597.00
+2026-07-10 11:00:52 | WARNING  | myapp:process_order:159 | Order ORD-20240115-001: large order detected, may need manual review
+2026-07-10 11:00:52 | INFO     | myapp:process_payment:167 | Payment gateway: connecting for order ORD-20240115-002 ...
+2026-07-10 11:00:52 | ERROR    | myapp:process_payment:176 | Payment failed for order ORD-20240115-002: Connection to payment gateway (pay.example.com:443) timed out after 30s
+Traceback (most recent call last):
+  File "C:\Users\10642\.qoderworkcn\workspace\mrec5v98i1lh26or\outputs\logging_demo\logging_multi_destination.py", line 171, in process_payment
+    raise ConnectionError(
+        "Connection to payment gateway (pay.example.com:443) timed out after 30s"
+    )
+ConnectionError: Connection to payment gateway (pay.example.com:443) timed out after 30s
+2026-07-10 11:00:52 | INFO     | myapp:main:225 | Fallback: queued order ORD-20240115-002 for retry
+2026-07-10 11:00:53 | INFO     | myapp:check_system_health:183 | System health check: starting...
+2026-07-10 11:00:53 | DEBUG    | myapp:check_system_health:184 | Health check: CPU=45%%, MEM=72%%, DISK=89%%
+2026-07-10 11:00:53 | CRITICAL | myapp:check_system_health:190 | SYSTEM FAILURE: All database replicas are down! Primary and standby unreachable.
+Traceback (most recent call last):
+  File "C:\Users\10642\.qoderworkcn\workspace\mrec5v98i1lh26or\outputs\logging_demo\logging_multi_destination.py", line 188, in check_system_health
+    raise RuntimeError("All database replicas are down! Primary and standby unreachable.")
+RuntimeError: All database replicas are down! Primary and standby unreachable.
+2026-07-10 11:01:08 | INFO     | myapp:process_order:148 | Order ORD-20240115-001: start processing, user=user_2048, items=3
+2026-07-10 11:01:08 | DEBUG    | myapp:process_order:151 | Order ORD-20240115-001: inventory check - SKU counts: {'SKU-A': 100, 'SKU-B': 90, 'SKU-C': 80}
+2026-07-10 11:01:08 | INFO     | myapp:process_order:155 | Order ORD-20240115-001: payment authorized, amount=597.00
+2026-07-10 11:01:08 | WARNING  | myapp:process_order:159 | Order ORD-20240115-001: large order detected, may need manual review
+2026-07-10 11:01:09 | INFO     | myapp:process_payment:167 | Payment gateway: connecting for order ORD-20240115-002 ...
+2026-07-10 11:01:09 | ERROR    | myapp:process_payment:176 | Payment failed for order ORD-20240115-002: Connection to payment gateway (pay.example.com:443) timed out after 30s
+Traceback (most recent call last):
+  File "C:\Users\10642\.qoderworkcn\workspace\mrec5v98i1lh26or\outputs\logging_demo\logging_multi_destination.py", line 171, in process_payment
+    raise ConnectionError(
+        "Connection to payment gateway (pay.example.com:443) timed out after 30s"
+    )
+ConnectionError: Connection to payment gateway (pay.example.com:443) timed out after 30s
+2026-07-10 11:01:09 | INFO     | myapp:main:225 | Fallback: queued order ORD-20240115-002 for retry
+2026-07-10 11:01:09 | INFO     | myapp:check_system_health:183 | System health check: starting...
+2026-07-10 11:01:09 | DEBUG    | myapp:check_system_health:184 | Health check: CPU=45%%, MEM=72%%, DISK=89%%
+2026-07-10 11:01:09 | CRITICAL | myapp:check_system_health:190 | SYSTEM FAILURE: All database replicas are down! Primary and standby unreachable.
+Traceback (most recent call last):
+  File "C:\Users\10642\.qoderworkcn\workspace\mrec5v98i1lh26or\outputs\logging_demo\logging_multi_destination.py", line 188, in check_system_health
+    raise RuntimeError("All database replicas are down! Primary and standby unreachable.")
+RuntimeError: All database replicas are down! Primary and standby unreachable.
+2026-07-10 15:15:14 | INFO     | myapp:process_order:147 | Order ORD-20240115-001: start processing, user=user_2048, items=3
+2026-07-10 15:15:14 | DEBUG    | myapp:process_order:152 | Order ORD-20240115-001: inventory check - SKU counts: {'SKU-A': 100, 'SKU-B': 90, 'SKU-C': 80}
+2026-07-10 15:15:14 | INFO     | myapp:process_order:159 | Order ORD-20240115-001: payment authorized, amount=597.00
+2026-07-10 15:15:14 | WARNING  | myapp:process_order:165 | Order ORD-20240115-001: large order detected, may need manual review
+2026-07-10 15:15:15 | INFO     | myapp:process_payment:175 | Payment gateway: connecting for order ORD-20240115-002 ...
+2026-07-10 15:15:15 | ERROR    | myapp:process_payment:184 | Payment failed for order ORD-20240115-002: Connection to payment gateway (pay.example.com:443) timed out after 30s
+Traceback (most recent call last):
+  File "D:\ZSP\Study\Python\30-days-of-python\day24\demo.py", line 179, in process_payment
+    raise ConnectionError(
+        "Connection to payment gateway (pay.example.com:443) timed out after 30s"
+    )
+ConnectionError: Connection to payment gateway (pay.example.com:443) timed out after 30s
+2026-07-10 15:15:15 | INFO     | myapp:main:235 | Fallback: queued order ORD-20240115-002 for retry
+2026-07-10 15:15:15 | INFO     | myapp:check_system_health:191 | System health check: starting...
+2026-07-10 15:15:15 | DEBUG    | myapp:check_system_health:192 | Health check: CPU=45%%, MEM=72%%, DISK=89%%
+2026-07-10 15:15:15 | CRITICAL | myapp:check_system_health:200 | SYSTEM FAILURE: All database replicas are down! Primary and standby unreachable.
+Traceback (most recent call last):
+  File "D:\ZSP\Study\Python\30-days-of-python\day24\demo.py", line 196, in check_system_health
+    raise RuntimeError(
+        "All database replicas are down! Primary and standby unreachable."
+    )
+RuntimeError: All database replicas are down! Primary and standby unreachable.
