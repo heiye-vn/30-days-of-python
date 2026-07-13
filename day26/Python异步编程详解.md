@@ -760,6 +760,25 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
+### 14.3 timeout_at 绝对超时时间
+
+```python
+async def main() -> None:
+    loop = asyncio.get_event_loop()
+    deadline = loop.time() + 3.0  # 绝对截止时间
+
+    try:
+        async with asyncio.timeout_at(deadline):
+            await asyncio.sleep(10)
+    except TimeoutError:
+        print("超时了！")
+
+
+asyncio.run(main())
+```
+
+适合多个任务共享同一个截止时间的场景
+
 在 AI Agent 里，超时尤其重要：
 
 - LLM 调用可能慢

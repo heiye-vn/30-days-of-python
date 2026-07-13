@@ -122,4 +122,96 @@ async def main3() -> None:
     print(result)
 
 
-asyncio.run(main3())
+# asyncio.run(main3())
+
+
+"""
+取消任务（Cancellation）
+异步任务可以被取消
+"""
+
+
+async def long_job() -> None:
+    try:
+        print("任务开始")
+        await asyncio.sleep(10)
+        print("任务完成")
+    except asyncio.CancelledError:
+        print("任务被取消，执行清理逻辑")
+        raise
+
+
+async def main4() -> None:
+    task = asyncio.create_task(long_job())
+    await asyncio.sleep(1)
+    task.cancel()
+
+    try:
+        await task
+    except asyncio.CancelledError:
+        print("main 捕获到任务取消")
+
+
+# asyncio.run(main4())
+
+
+"""
+限制并发数量（Semaphore）
+"""
+
+
+async def call_api(index: int, semaphore: asyncio.Semaphore) -> str:
+    async with semaphore:
+        print(f"开始请求 {index}")
+        await asyncio.sleep(1)
+        print(f"完成请求 {index}")
+        return f"result-{index}"
+
+
+async def main5() -> None:
+    semaphore = asyncio.Semaphore(3)
+
+    tasks = [call_api(index, semaphore) for index in range(10)]
+
+    results = await asyncio.gather(*tasks)
+    print(results)
+
+
+# start = time.time()
+# asyncio.run(main5())
+# print(f"执行时间：{time.time() - start:.2f} s")
+
+
+"""
+异步山下文管理器（async with）
+内部实现的是 __aenter()__ 和 __aexit__() 方法
+"""
+
+
+"""
+异步生成器（async for）
+用于遍历异步可迭代对象
+
+async for item in iterable:
+等价于JavaScript中的：for await (const item of iterable)
+"""
+
+
+async def stream_lines():
+    for i in range(5):
+        await asyncio.sleep(0.5)  # 模拟异步 I/O
+        yield f"第 {i} 行数据"
+
+
+async def stream_numbers():
+    for number in range(3):
+        await asyncio.sleep(1)
+        yield number
+
+
+async def main6() -> None:
+    async for line in stream_lines():
+        print(line)
+
+
+asyncio.run(main6())
