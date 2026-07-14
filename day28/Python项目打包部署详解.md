@@ -1,6 +1,9 @@
 # Python 项目打包部署详解
 
-> 写 Python 项目时，代码能在自己电脑上跑起来只是第一步。真正交付时，还要回答这些问题：别人怎么安装？依赖怎么固定？命令入口在哪里？配置和密钥怎么管理？如何部署到服务器、Docker、云平台或公司内网？本篇笔记围绕“从本地代码到可交付应用”的完整流程，讲清楚 Python 项目打包和部署的常见做法。
+> 写 Python
+>
+项目时，代码能在自己电脑上跑起来只是第一步。真正交付时，还要回答这些问题：别人怎么安装？依赖怎么固定？命令入口在哪里？配置和密钥怎么管理？如何部署到服务器、Docker、云平台或公司内网？本篇笔记围绕“从本地代码到可交付应用”的完整流程，讲清楚
+> Python 项目打包和部署的常见做法。
 
 ---
 
@@ -614,19 +617,19 @@ gunicorn app.main:app \
 
 ```ini
 [Unit]
-Description=My Python Project
-After=network.target
+Description = My Python Project
+After = network.target
 
 [Service]
-User=www-data
-WorkingDirectory=/opt/my-project
-Environment="APP_ENV=prod"
-Environment="DATABASE_URL=postgresql://user:password@localhost:5432/app_db"
-ExecStart=/opt/my-project/.venv/bin/gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 127.0.0.1:8000 --workers 4
-Restart=always
+User = www-data
+WorkingDirectory = /opt/my-project
+Environment = "APP_ENV=prod"
+Environment = "DATABASE_URL=postgresql://user:password@localhost:5432/app_db"
+ExecStart = /opt/my-project/.venv/bin/gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 127.0.0.1:8000 --workers 4
+Restart = always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy = multi-user.target
 ```
 
 启动：
@@ -695,7 +698,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY ../note .
 
 EXPOSE 8000
 
