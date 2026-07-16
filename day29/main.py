@@ -5,8 +5,9 @@ FastAPI 服务
 启动服务：uvicorn main:app --reload
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+from starlette import status
 
 app = FastAPI()
 
@@ -48,3 +49,40 @@ class UserCreate(BaseModel):
 @app.post("/users")
 def create_user(user: UserCreate):
     return {"message": "created", "user": user}
+
+
+"""
+响应模型：response_model
+控制返回数据的格式，避免误返回敏感字段
+"""
+
+
+class UserCreate2(BaseModel):
+    username: str
+    password: str = Field(min_length=8)
+
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+
+
+@app.post(
+    "/users/add", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+)
+def create_user2(user: UserCreate2):
+    saved_user = {"id": 1, "username": user.username, "password": user.password}
+    return saved_user
+
+
+"""
+HTTPException 异常
+"""
+
+
+@app.get("/users/{user_id}")
+def get_user(user_id: int):
+    if user_id != 1:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+
+    return {"id": 1, "username": "Alice"}
