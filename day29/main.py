@@ -5,7 +5,7 @@ FastAPI 服务
 启动服务：uvicorn main:app --reload
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel, Field
 from starlette import status
 
@@ -86,3 +86,46 @@ def get_user(user_id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
 
     return {"id": 1, "username": "Alice"}
+
+
+"""
+Depends：依赖注入系统
+可以将可复用的逻辑（如认证、数据库连接、参数校验）抽取为独立函数，然后"声明式"地注入到路由中
+
+常见的依赖有：获取数据库 session、获取当前登录用户、校验 API Key、读取配置、复用分页、过滤参数等
+"""
+
+
+class Pagination(BaseModel):
+    page: int = Field(default=1, ge=1)
+    size: int = Field(default=10, ge=1, le=100)
+
+
+# 定义依赖函数，会自动从请求的 Query 参数中提取 page 和 size
+def get_pagination(page: int = 1, size: int = 10) -> Pagination:
+    return Pagination(page=page, size=size)
+
+
+# 使用 Depends 注入分页函数
+@app.get("/articles")
+def list_articles(pagination: Pagination = Depends(get_pagination)):
+    return {"page": pagination.page, "size": pagination.size}
+
+
+# 使用 Depends 注入分页函数
+@app.get("/orders")
+def list_orders(pagination: Pagination = Depends(get_pagination)):
+    return {"page": pagination.page, "size": pagination.size}
+
+
+# 模拟当前用户
+def get_current_user(x_token: str | None = Header(default=None)):
+    if x_token != "secret-token":
+        raise HTTPException(status_code=401, detail="未登录")
+
+    return {"id": 1, "username": "alice"}
+
+
+@app.get("/me")
+def read_me(current_user: dict = Depends(get_current_user)):
+    return current_user
