@@ -5,11 +5,14 @@ FastAPI 服务
 启动服务：uvicorn main:app --reload
 """
 
+from app.routers import todos
 from fastapi import Depends, FastAPI, Header, HTTPException
 from pydantic import BaseModel, Field
 from starlette import status
 
-app = FastAPI()
+app = FastAPI(title="Todo API")
+
+app.include_router(todos.router)
 
 
 @app.get("/")
